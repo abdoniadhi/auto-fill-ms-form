@@ -55,7 +55,7 @@ jobs:
         with:
           context: .
           push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/auto-fill-ms-form:${{ env.TAG }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/auto-fill-ms-form:${{ env.TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
@@ -82,5 +82,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/auto-fill-ms-form:${{ env.TAG }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/auto-fill-ms-form:${{ env.TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
