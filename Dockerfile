@@ -4,10 +4,9 @@ FROM python:alpine
 ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies
-RUN apt-get update && \
-    apt-get install -y wget gnupg2 unzip && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apk update && \
+    apk add --no-cache wget gnupg unzip && \
+    rm -rf /var/cache/apk/*
 
 
 # Add ChromeDriver
