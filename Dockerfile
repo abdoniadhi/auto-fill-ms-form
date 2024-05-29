@@ -10,9 +10,11 @@ RUN apk update && \
 
 
 # Add ChromeDriver
-RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.78/linux64/chromedriver-linux64.zip
-RUN unzip /tmp/chromedriver-linux64.zip chromedriver-linux64 -d /usr/local/bin/
-RUN rm /tmp/chromedriver-linux64.zip
+RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.78/linux64/chromedriver-linux64.zip && \
+    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chromedriver-linux64/chromedriver && \
+    rm -rf /tmp/chromedriver-linux64.zip && \
+    rm -rf /var/cache/apk/*
 
 # Set display port to avoid crash
 ENV DISPLAY=:99
