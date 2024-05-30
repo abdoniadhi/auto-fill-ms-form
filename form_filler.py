@@ -4,6 +4,7 @@ import time
 import logging
 import sys
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 
@@ -31,12 +32,20 @@ param_option = get_env_variable('PARAM_OPTION')
 logging.info(f"Option : {param_option}")
 param_date = get_env_variable('PARAM_DATE')
 logging.info(f"Date : {param_date}")
-port = get_env_variable('PORT')
-logging.info(f"Port : {port}")
+param_port = get_env_variable('PORT')
+logging.info(f"Port : {param_port}")
 
-# Set up Selenium WebDriver
-driver = webdriver.Chrome(port=port)
-logging.info(f"WebDriver initialized on {port}.")
+#set up service for new Selenium Docker
+#service = webdriver.ChromeService(port=param_port)
+
+#set option 
+#chrome_options = Options()
+#chrome_options.add_argument("--no-sandbox")
+#chrome_options.add_argument("--headless")
+
+# Set up Selenium WebDriver with the specified ChromeDriver path Docker
+driver = webdriver.Chrome()
+logging.info("WebDriver initialized.")
 driver.get('https://forms.office.com/Pages/ResponsePage.aspx?id=dAKowprmR0WS2VWRH9i4krE_YecTiCpPscrkI42fbdJUMTEyV0JDMkZYM1FYWlhZTU5YQUxGNEtERC4u')
 logging.info("Navigated to the form URL.")
 

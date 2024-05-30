@@ -29,3 +29,5 @@ docker build -t selenium-automation .
 ### Run the Docker Container
 
 Run the container with the environment variables specified in the `.env` file:
+
+docker run --rm -it -p 4444:4444 --env-file .env auto-fill-ms-form:latest

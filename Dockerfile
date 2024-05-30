@@ -1,19 +1,12 @@
 # Use an official Python runtime as a parent image
-FROM python:alpine
+FROM python:3.9-alpine
+
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
 # Install system dependencies
 RUN apk update && \
-    apk add --no-cache wget gnupg unzip && \
-    rm -rf /var/cache/apk/*
-
-
-# Add ChromeDriver
-RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.78/linux64/chromedriver-linux64.zip && \
-    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ && \
-    chmod +x /usr/local/bin/chromedriver-linux64/chromedriver && \
-    rm -rf /tmp/chromedriver-linux64.zip && \
+    apk add --no-cache gnupg udev ttf-freefont bash chromium chromium-chromedriver && \
     rm -rf /var/cache/apk/*
 
 # Set display port to avoid crash
