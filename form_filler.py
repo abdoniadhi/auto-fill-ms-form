@@ -6,7 +6,12 @@ import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -29,25 +34,20 @@ logging.info("Excel file loaded successfully.")
 
 # Read other parameters from environment variables
 param_option = get_env_variable('PARAM_OPTION')
-logging.info(f"Option : {param_option}")
+logging.info(f"Option: {param_option}")
 param_date = get_env_variable('PARAM_DATE')
-logging.info(f"Date : {param_date}")
+logging.info(f"Date: {param_date}")
 param_port = get_env_variable('PORT')
-logging.info(f"Port : {param_port}")
+logging.info(f"Port: {param_port}")
 
-#set up service for new Selenium Docker
-#service = webdriver.ChromeService(port=param_port)
-
-#set option 
-#chrome_options = Options()
-#chrome_options.add_argument("--no-sandbox")
-#chrome_options.add_argument("--headless")
-
-# Set up Selenium WebDriver with the specified ChromeDriver path Docker
+# Set up Selenium WebDriver
 driver = webdriver.Chrome()
 logging.info("WebDriver initialized.")
 driver.get('https://forms.office.com/Pages/ResponsePage.aspx?id=dAKowprmR0WS2VWRH9i4krE_YecTiCpPscrkI42fbdJUMTEyV0JDMkZYM1FYWlhZTU5YQUxGNEtERC4u')
 logging.info("Navigated to the form URL.")
+time.sleep(3)
+# Define a wait object
+wait = WebDriverWait(driver, 10)
 
 # Loop through each row in the Excel file
 for index, row in df.iterrows():
@@ -55,34 +55,42 @@ for index, row in df.iterrows():
         logging.info(f"Processing row {index + 1}")
 
         # Fill in the 'NIK' field
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_rb10767da339943b7aa49fb9e26308bd4 QuestionInfo_rb10767da339943b7aa49fb9e26308bd4"]').click()
+        nik_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[aria-labelledby="QuestionId_rb10767da339943b7aa49fb9e26308bd4 QuestionInfo_rb10767da339943b7aa49fb9e26308bd4"]')))
+        nik_element.click()
         logging.info("Clicked on the 'NIK' field.")
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_rb10767da339943b7aa49fb9e26308bd4 QuestionInfo_rb10767da339943b7aa49fb9e26308bd4"]').send_keys(row['NIK'])
-        logging.info(f"Inserted NIK: {row['NIK']}")
+        nik_element.send_keys(row['NIK'])
+        inserted_nik = nik_element.get_attribute('value').strip()
+        logging.info(f"Inserted NIK: {inserted_nik}")
+        assert inserted_nik == str(row['NIK']).strip(), f"NIK field value mismatch: expected {row['NIK']}, got {inserted_nik}"
 
         # Fill in the 'NAMA' field
-        driver.find_element(By.CSS_SELECTOR,'[aria-labelledby="QuestionId_r86e5151e706b4b70ac0aed161f470b41 QuestionInfo_r86e5151e706b4b70ac0aed161f470b41"]').click()
+        nama_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r86e5151e706b4b70ac0aed161f470b41 QuestionInfo_r86e5151e706b4b70ac0aed161f470b41"]')))
+        nama_element.click()
         logging.info("Clicked on the 'NAMA' field.")
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r86e5151e706b4b70ac0aed161f470b41 QuestionInfo_r86e5151e706b4b70ac0aed161f470b41"]').send_keys(row['NAMA'])
-        logging.info(f"Inserted NAMA: {row['NAMA']}")
+        nama_element.send_keys(row['NAMA'])
+        inserted_nama = nama_element.get_attribute('value').strip()
+        logging.info(f"Inserted NAMA: {inserted_nama}")
+        assert inserted_nama == str(row['NAMA']).strip(), f"NAMA field value mismatch: expected {row['NAMA']}, got {inserted_nama}"
 
         # Set the date
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r8d3dffc8ddf64aff9cc565a8572defb6 QuestionInfo_r8d3dffc8ddf64aff9cc565a8572defb6"]').click()
-        logging.info("Clicked on the date field.")
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r8d3dffc8ddf64aff9cc565a8572defb6 QuestionInfo_r8d3dffc8ddf64aff9cc565a8572defb6"]').click()
-        logging.info("Clicked on the date field.")
-        time.sleep(1)
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r8d3dffc8ddf64aff9cc565a8572defb6 QuestionInfo_r8d3dffc8ddf64aff9cc565a8572defb6"]').send_keys(param_date)
-        logging.info(f"Inserted Date: {param_date}")
-        time.sleep(1)
+        date_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r8d3dffc8ddf64aff9cc565a8572defb6 QuestionInfo_r8d3dffc8ddf64aff9cc565a8572defb6"]')))
+        #date_element.click()
+        #logging.info("Clicked on the date field.")
+        date_element.send_keys(param_date)
+        inserted_date = date_element.get_attribute('value').strip()
+        logging.info(f"Inserted Date: {inserted_date}")
+        assert inserted_date == param_date.strip(), f"Date field value mismatch: expected {param_date}, got {inserted_date}"
 
         # Click to select an option
-        driver.find_element(By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r0db7cfb2a11648e6a1dc4f413f0fcadb QuestionInfo_r0db7cfb2a11648e6a1dc4f413f0fcadb"]').click()
+        #option_element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[aria-labelledby="QuestionId_r0db7cfb2a11648e6a1dc4f413f0fcadb QuestionInfo_r0db7cfb2a11648e6a1dc4f413f0fcadb"]')))
+        #option_element.click()
+        #logging.info("Clicked on the option field.")
         driver.find_element(By.CSS_SELECTOR, f'[value="{param_option}"]').click()
         logging.info(f"Selected the option {param_option}.")
 
         # Submit
-        driver.find_element(By.CSS_SELECTOR, '[data-automation-id="submitButton"]').click()
+        submit_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-automation-id="submitButton"]')))
+        submit_button.click()
         logging.info("Clicked to proceed to next step.")
         time.sleep(3)
         # Back to home
@@ -92,9 +100,14 @@ for index, row in df.iterrows():
         # Log row submission
         logging.info(f"Submitted row {index + 1}")
         time.sleep(2)
-    except Exception as e:
+    except AssertionError as e:
+        logging.error(f"Assertion error on row {index + 1}: {e}")
         driver.quit()
+        sys.exit(1)
+    except Exception as e:
         logging.error(f"Error processing row {index + 1}: {e}")
+        driver.quit()
+        sys.exit(1)
 
 # Close the browser after the process is complete
 driver.quit()
