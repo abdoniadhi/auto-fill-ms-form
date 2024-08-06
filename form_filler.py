@@ -4,6 +4,8 @@ import time
 import logging
 import sys
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -41,11 +43,23 @@ param_port = get_env_variable('PORT')
 logging.info(f"Port: {param_port}")
 
 # Set up Selenium WebDriver
-driver = webdriver.Chrome()
+# Path to your Chrome user data directory
+user_data_dir = "C:/Users/abdoni.prakoso/AppData/Local/Google/Chrome/User Data"
+
+# Profile you want to use (e.g., "Default" or "Profile 1")
+profile_dir = "Default"
+
+options = webdriver.ChromeOptions()
+options.add_argument(f"user-data-dir={user_data_dir}")
+options.add_argument(f"profile-directory={profile_dir}")
+
+# Initialize WebDriver
+driver = webdriver.Chrome(options=options)
+
 logging.info("WebDriver initialized.")
 driver.get('https://forms.office.com/Pages/ResponsePage.aspx?id=dAKowprmR0WS2VWRH9i4krE_YecTiCpPscrkI42fbdJUMTEyV0JDMkZYM1FYWlhZTU5YQUxGNEtERC4u')
 logging.info("Navigated to the form URL.")
-time.sleep(3)
+time.sleep(20)
 # Define a wait object
 wait = WebDriverWait(driver, 10)
 
