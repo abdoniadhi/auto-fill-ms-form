@@ -22,9 +22,9 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Set default values for environment variables
-ENV EXCEL_FILE="TESTING-FILE.xlsx"
+ENV EXCEL_FILE="coba.xlsx"
 ENV PARAM_OPTION="Badminton - Cyber Office"
-ENV PARAM_DATE="3/28/2024"
+ENV PARAM_DATE="10/07/2024"
 
 # Run the script when the container launches
 CMD ["python", "./form_filler.py"]
