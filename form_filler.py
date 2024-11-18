@@ -52,6 +52,11 @@ profile_dir = "Default"
 options = webdriver.ChromeOptions()
 options.add_argument(f"user-data-dir={user_data_dir}")
 options.add_argument(f"profile-directory={profile_dir}")
+options.add_argument("--no-sandbox")  # Required when running as root in Docker
+options.add_argument("--disable-dev-shm-usage")  # May help if there are shared memory issues
+options.add_argument("--headless")  # Optional: Runs Chrome in headless mode
+options.add_argument("--disable-gpu")  # Optional: Disables GPU acceleration
+options.add_argument("start-maximized")  # Optional: Starts Chrome in maximized mode
 
 # Initialize WebDriver
 driver = webdriver.Chrome(options=options)
