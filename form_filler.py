@@ -44,7 +44,7 @@ logging.info(f"Port: {param_port}")
 
 # Set up Selenium WebDriver
 # Path to your Chrome user data directory
-user_data_dir = "C:/Users/abdoni.prakoso/AppData/Local/Google/Chrome/User Data"
+user_data_dir = "/app/user-data"
 
 # Profile you want to use (e.g., "Default" or "Profile 1")
 profile_dir = "Default"
